@@ -1,86 +1,62 @@
 // read font file
 var Font = require('fonteditor-core').Font;
 var fs = require('fs');
-var buffer = fs.readFileSync('FiraCode/distr/ttf/FiraCode-Medium.ttf');
-var scriptsBuffer = fs.readFileSync('fonts/ofl/acme/Acme-Regular.ttf');
-// read font data
-var font = Font.create(buffer, {
+
+var combinations = require('./fonts-combinations');
+var fontsCombinations = combinations.get();
+const fontOptions = {
     type: 'ttf', // support ttf,woff,eot,otf,svg
     // subset: [65, 66], // only read `a`, `b` glyf
     hinting: true, // save font hinting
     compound2simple: true, // transform ttf compound glyf to simple
     inflate: null, // inflate function for woff
     combinePath: false, // for svg path
+};
+console.log(fontsCombinations);
+
+function updateItalic(italicFont) {
+    italicFont.data['OS/2'].sFamilyClass = 0;
+    italicFont.data['OS/2'].bFamilyType = 0;
+    italicFont.data['OS/2'].bLetterform = 0;
+    italicFont.data['OS/2'].achVendID= 'HT  ';
+    italicFont.data['OS/2'].fsSelection= 129;
+    italicFont.data['OS/2'].usMaxContext = 1;
+    italicFont.data['OS/2'].ulCodePageRange1 = 536871327;
+
+    return italicFont;
+}
+
+function updateFontData(font, newName) {
+    var oldFontFamily = font.data.name.fontFamily;
+    font.data.name.fontFamily = newName;
+    font.data.name.fontSubFamily = newName;
+    font.data.name.fullName = newName;
+    font.data.name.uniqueSubFamily = '0.01 ' + newName;
+    font.data.name.postScriptName = newName;
+
+    return font;
+}
+
+fontsCombinations.forEach(function(comb){
+    console.log(comb);
+    let combinedFontName = comb.regular + '-' + comb.italic;
+
+    var buffer = fs.readFileSync('FiraCode/distr/ttf/' + comb.regular + '.ttf');
+    var italicBuffer = fs.readFileSync(comb.dir + comb.italic + '.ttf');
+    var boldBuffer = fs.readFileSync('FiraCode/distr/ttf/' + comb.bold + '.ttf');
+    var regularFont = Font.create(buffer, fontOptions );
+    var italicFont = Font.create(italicBuffer, fontOptions);
+    var boldFont = Font.create(boldBuffer, fontOptions);
+
+    regularFont = updateFontData(regularFont, combinedFontName);
+    italicFont = updateFontData(italicFont, combinedFontName + '-Italic');
+    boldFont = updateFontData(boldFont, combinedFontName + '-Bold');
+
+    italicFont = updateItalic(italicFont);
+
+    fs.writeFileSync('tests/results/' + combinedFontName + '.ttf', buffer);
+    fs.writeFileSync('tests/results/' + combinedFontName + '-Italic.ttf', italicBuffer);
+    fs.writeFileSync('tests/results/' + combinedFontName + '-Bold.ttf', boldBuffer);
+
 });
-
-var italicScriptsFont = Font.create(scriptsBuffer, {
-    type: 'ttf', // support ttf,woff,eot,otf,svg
-    // subset: [65, 66], // only read `a`, `b` glyf
-    hinting: true, // save font hinting
-    compound2simple: true, // transform ttf compound glyf to simple
-    inflate: null, // inflate function for woff
-    combinePath: false, // for svg path
-})
-var fontObject = font.get();
-var italicScriptsFontObject = font.get();
-// console.log(Object.keys(fontObject));
-/* => [ 'version',
-  'numTables',
-  'searchRenge',
-  'entrySelector',
-  'rengeShift',
-  'head',
-  'maxp',
-  'glyf',
-  'cmap',
-  'name',
-  'hhea',
-  'post',
-  'OS/2',
-  'fpgm',
-  'cvt',
-  'prep'
-]
-*/
-
-font.data.name.fontFamily = 'TEST';
-font.data.name.fontSubFamily = 'TEST';
-font.data.name.fullName = 'TEST';
-font.data.name.uniqueSubFamily = '1.207;CTDB;TEST';
-font.data.name.postScriptName = 'TEST';
-
-
-italicScriptsFont.data.name.fontFamily = 'TEST';
-italicScriptsFont.data.name.fontSubFamily = 'TEST';
-italicScriptsFont.data.name.fullName = 'TEST-Italic';
-italicScriptsFont.data.name.uniqueSubFamily = '1.207;CTDB;TEST-Italic';
-italicScriptsFont.data.name.postScriptName = 'TEST-Italic';
-
-
-var buffer = font.write({
-    type: 'ttf', // support ttf,woff,eot,otf,svg
-    hinting: true, // save font hinting
-    deflate: null, // deflate function for woff
-});
-
-//
-italicScriptsFont.data['OS/2'].sFamilyClass = 0;
-italicScriptsFont.data['OS/2'].bFamilyType = 0;
-italicScriptsFont.data['OS/2'].bLetterform = 0;
-italicScriptsFont.data['OS/2'].achVendID= 'HT  ';
-italicScriptsFont.data['OS/2'].fsSelection= 129;
-italicScriptsFont.data['OS/2'].usMaxContext = 1;
-italicScriptsFont.data['OS/2'].ulCodePageRange1 = 536871327;
-var scriptsBuffer = italicScriptsFont.write({
-    type: 'ttf', // support ttf,woff,eot,otf,svg
-    hinting: true, // save font hinting
-    deflate: null, // deflate function for woff
-});
-
-
-console.log(italicScriptsFont.data['OS/2']);
-
-fs.writeFileSync('tests/results/test.ttf', buffer);
-fs.writeFileSync('tests/results/test-italic.ttf', scriptsBuffer);
-
 
