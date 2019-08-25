@@ -1,1 +1,6 @@
 ./var
+*.sfd
+yarn-error.log
+.idea
+./*.ttf
+./result
