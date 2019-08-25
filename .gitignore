@@ -2,5 +2,4 @@
 *.sfd
 yarn-error.log
 .idea
-./*.ttf
-./result
+./tests/results/*
