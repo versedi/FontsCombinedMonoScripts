@@ -1,4 +1,4 @@
-#Fira Code & Pacifico Combined
+# Fira Code & Pacifico Combined
 
 Fonts and licences are according to their rightful owners.
 
