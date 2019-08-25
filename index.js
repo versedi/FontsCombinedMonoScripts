@@ -1,6 +1,18 @@
 // read font file
 var Font = require('fonteditor-core').Font;
 var fs = require('fs');
+var outputDir = './fonts-combined';
+
+createDir(outputDir);
+
+function createDir(name) {
+    var dir = './' + name;
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+}
+
+
 
 var combinations = require('./fonts-combinations');
 var fontsCombinations = combinations.get();
@@ -40,6 +52,7 @@ function updateFontData(font, newName) {
 fontsCombinations.forEach(function(comb){
     console.log(comb);
     let combinedFontName = comb.regular + '-' + comb.italic;
+    createDir('./fonts-combined/' +  combinedFontName);
 
     var buffer = fs.readFileSync('FiraCode/distr/ttf/' + comb.regular + '.ttf');
     var italicBuffer = fs.readFileSync(comb.dir + comb.italic + '.ttf');
@@ -54,9 +67,9 @@ fontsCombinations.forEach(function(comb){
 
     italicFont = updateItalic(italicFont);
 
-    fs.writeFileSync('tests/results/' + combinedFontName + '.ttf', buffer);
-    fs.writeFileSync('tests/results/' + combinedFontName + '-Italic.ttf', italicBuffer);
-    fs.writeFileSync('tests/results/' + combinedFontName + '-Bold.ttf', boldBuffer);
+    fs.writeFileSync( 'fonts-combined/' + combinedFontName + '/' + combinedFontName + '.ttf', buffer);
+    fs.writeFileSync('fonts-combined/' + combinedFontName + '/' + combinedFontName + '-Italic.ttf', italicBuffer);
+    fs.writeFileSync('fonts-combined/' + combinedFontName + '/' + combinedFontName + '-Bold.ttf', boldBuffer);
 
 });
 
