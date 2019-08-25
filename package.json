@@ -1,0 +1,33 @@
+{
+  "name": "fonts-combined-mono-scripts",
+  "version": "0.0.1",
+  "description": "Fonts for coding/programming as an alternative to famous Operator Mono & Dank Mono but based on other Open Sourced fonts. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/versedi/FontsCombinedMonoScripts.git"
+  },
+  "keywords": [
+    "fonts",
+    "programming",
+    "font",
+    "coding",
+    "mono",
+    "scripts",
+    "combined",
+    "fonts"
+  ],
+  "author": "versedi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/versedi/FontsCombinedMonoScripts/issues"
+  },
+  "homepage": "https://github.com/versedi/FontsCombinedMonoScripts#readme",
+  "dependencies": {
+    "fonteditor-core": "^1.0.5"
+  }
+}
