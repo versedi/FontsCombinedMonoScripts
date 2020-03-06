@@ -1,5 +1,8 @@
 # Fonts Combined for programming - an Open Sourced alternative to Operator Mono and Dank Mono
 
+![FiraCodePacifico Example](https://i.imgur.com/Z5H9uYH.png)
+
+
 Not even alpha stage, to be automated. 
 
 
